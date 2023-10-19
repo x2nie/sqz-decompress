@@ -1,5 +1,11 @@
 #include <Python.h>
+#include "unpack.h"
+#include "unpack.c"
+
 #include "util.h"
+#include "util.c"
+
+int g_uncompressed_size;
 
 static PyObject *method_decompress(PyObject *self, PyObject *args) {
     char *filename, *filename2 = NULL;
@@ -11,10 +17,12 @@ static PyObject *method_decompress(PyObject *self, PyObject *args) {
     }
 
     FILE *fp = fopen(filename, "rb");
-
-    FILE *fp2 = fopen(filename2, "w");
-    bytes_copied = fputs(filename2, fp2);
+    uint8_t *p = unpack(fp, &g_uncompressed_size);
     fclose(fp);
+
+    FILE *fp2 = fopen(filename2, "wb");
+    // bytes_copied = fputs(filename2, fp2);
+    bytes_copied = fwrite(p, g_uncompressed_size, 1, fp2);
     fclose(fp2);
 
     return PyLong_FromLong(bytes_copied);
@@ -22,6 +30,7 @@ static PyObject *method_decompress(PyObject *self, PyObject *args) {
 
 static PyMethodDef FputsMethods[] = {
     {"decompress", method_decompress, METH_VARARGS, "Python interface FUNCTION for sqz C library function"},
+    // {"decompress", method_decompress, METH_VARARGS, "Python interface FUNCTION for sqz C library function"},
     {NULL, NULL, 0, NULL}
 };
 

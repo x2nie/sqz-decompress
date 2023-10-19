@@ -2,7 +2,8 @@ import sqz
 
 def test_copy_data():
     compressed_file = "LEVEL1.SQZ"
-    bytes_copied = sqz.decompress(compressed_file, 'test_write.txt')
+    output_file = "LEVEL1.bin"
+    bytes_copied = sqz.decompress(compressed_file, output_file)
 
     # with open('test_write.txt', 'r') as f:
     #     content_copied = f.read()
