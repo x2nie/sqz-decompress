@@ -11,16 +11,60 @@ Version history:
 This file explains the format of LEVEL*.SQZ, after decompression.
 
 # TLDR;
-| BLock Name   | Start at / Offset | Bytes Size   |
-| ------------ | ----------------- | ------------ |
-| Tile Map     | 0                 | 256 * height |
-| Lookup Tbl   | 256 * height      | 512          |
-| Small Num    |                   | max(lookup<256)  |
-| Level info:  | size(file) - 5029 | 5029         |
-| - Tiles p1   |  -5029 + 0        |  256         |
-| - Tiles p2   |  -5029 + 256      |  256         |
-| - Tiles p3   |  -5029 + 512      |  256         |
-| - Tiles p3   |  -5029 + 4031     |  256         |
+| BLock Name            | Start at / Offset | Bytes Size   |
+| --------------------- | ----------------- | ------------ |
+| Tile Map              | 0                 | 256 * height |
+| Lookup Table          | 256 * height      | 512          |
+| Small Numbers         |                   | max(lookup<256)  |
+| Tile Bitmaps          | size(file) - 5029 | 128 * max(lookup<256) |
+| Level infos:          | size(file) - 5029 | 5029         |
+| - Tile Properties 1   |  -5029 + 0        |  256         |
+| - Tile Properties 2   |  -5029 + 256      |  256         |
+| - Tile Properties 3   |  -5029 + 512      |  256         |
+| - Tile Properties 3   |  -5029 + 4031     |  256         |
+
+### Bitmap Tiles 
+Each tile is 16x16 pixels, 4bits per pixel = 128 bytes.
+
+### Tiles Property 1
+  `Horizontal properties`
+
+  |  Value | Meaning |
+  | :----: | ------- |
+  |  1     | Solid sides |
+  |  2     | Deadly from the sides |
+
+### Tiles Property 2 
+  `Vertical properties`
+  |  Value | Meaning |
+  | :----: | ------- |
+  |  1     | Solid top, some of these tiles have different 'height', the player is forcing down through them a little (sample is bone rubbish at level E) |
+  |  2     | Slightly slippery |
+  |  3     | Slippery |
+  |  4     | Not used in original levels, AFAIK, but if set makes floor VERY slippery (like in ttf) |
+  |  5     | When standing on it and pressing down, becomes non-solid (hatches on level 2) |
+  |  6     | Deadly from the top |
+
+### Tiles Property 3 
+  `Misc`
+  |  Bit  |  Meaning |
+  | :---: | ------- |
+  |  0    |  Solid bottom |
+  |  1    |  Deadly from the bottom |
+  |  4    |  Seen only in combo with bit 6 on level 3. Flies are going out of it. |
+  |  5    |  When stepped on, switches to next tile |
+  |  6    |  Player is partially hidden behind the tile, see offset 777. |
+  |  7    |  Tile is animated, using current and next two tiles (next two tiles are also animated, even if their third byte doesn't have bit 7 set) |
+
+### Tiles Property 4
+  `Slope information`
+  |  Bit  |  Meaning |
+  | :---: | ------- |
+  |  0..3 |  Reversed height of left corner. Height of right corner depends on adjacent tile if not horizontal. |
+  |  4    |  If set, tile is a slope going downright |
+  |  5    |  If set, tile is a slope going upright |
+
+    If bits 4..7 are 0, the tile is a horizontal floor.
 
 ## Level tiles height
 All levels are 256 tiles wide, but their height varies. Unfortunately, you
@@ -47,8 +91,7 @@ less than 256, equal to 256 and greater than 256.
 You need to determine the maximum value among the level-specific tiles, so this 
 maximum will be in the range 0..255; let's call this SmallNum. 
 For these small numbers, a total of SmallNum 4-bit 16*16-sized tile bitmaps 
-can be found directly after the lookup
-table (at byte offset number*128; 
+can be found directly after the lookup table (at byte offset number*128; 
 `128` is the size in bytes one tile takes),
 while for the larger numbers, the shared tiles are in the (compressed) file
 UNION.SQZ at offset (number-256)*128.
@@ -399,7 +442,8 @@ Now a detailed description for the above fields.
   nothing changes ingame.
 
 ## Platforms: offset 4777
-  Behavior:
+```
+  Behavior:  
     Bit  Meaning
     0..2 Direction of moving
          7 0 1
@@ -428,27 +472,30 @@ Now a detailed description for the above fields.
 Kong: offsets 5017, 5019, 5021, 5022, 5024, 5025, 5027
   Yeah, that's him: big dumb monkey. Tried to place him on 6th level. That was
   strange, you should try it yourself ;)
+```
 
-
+## Unknown entries among levels
 Value of unknown entries in the original levels:
-  Level    768(int) 775(byte) 
-  ---------------------------
-    1         38       0
-    2         93       0
-    3         93       0
-    4         38       0
-    5         38       0
-    6        113       0
-    7        124       0
-    8         38       0
-    9          3       0
-    A        180       0
-    B         93       0
-    C         93       0
-    D         93       0
-    E          8       0
-    F          0       0
-    G        124       0
 
-That's all for now... several bytes are still not clear. If you can tell me
-something about them, please do.
+|  Level  |  768(int) |  775(byte) |
+|  ------ | --------- | ---------- |
+|    1    |     38    |     0     |
+|    2    |     93    |     0     |
+|    3    |     93    |     0     |
+|    4    |     38    |     0     |
+|    5    |     38    |     0     |
+|    6    |    113    |     0     |
+|    7    |    124    |     0     |
+|    8    |     38    |     0     |
+|    9    |      3    |     0     |
+|    A    |    180    |     0     |
+|    B    |     93    |     0     |
+|    C    |     93    |     0     |
+|    D    |     93    |     0     |
+|    E    |      8    |     0     |
+|    F    |      0    |     0     |
+|    G    |    124    |     0     |
+
+That's all for now... \
+several bytes are still not clear. \
+If you can tell me something about them, please do.
