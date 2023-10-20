@@ -5,19 +5,19 @@ from struct import unpack
 from all_levels import *
 
 LEVEL = 1
-LEVEL = 2
-LEVEL = 3
-LEVEL = 4
-LEVEL = 5
-LEVEL = 6
-LEVEL = 7
-LEVEL = 8
-LEVEL = 9
-LEVEL = 10
-LEVEL = 11
-LEVEL = 14
-LEVEL = 15
-LEVEL = 16
+# LEVEL = 2
+# LEVEL = 3
+# LEVEL = 4
+# LEVEL = 5
+# LEVEL = 6
+# LEVEL = 7
+# LEVEL = 8
+# LEVEL = 9
+# LEVEL = 10
+# LEVEL = 11
+# LEVEL = 14
+# LEVEL = 15
+# LEVEL = 16
 HEIGHT = HEIGHTS[LEVEL-1]
 
 
@@ -30,6 +30,72 @@ def decompress():
     #     content_copied = f.read()
 
     # assert content_copied == content_to_copy
+
+def gen_Tiled():
+    f = open('Assets/LEVEL%s.bin' % LEVEL, 'rb')
+
+    #? find tile count
+    BITMAP_COUNT = 0      #? init
+    TABLE = []
+    f.seek(256*HEIGHT) #skip
+    for i in range(256):
+        v = f.read(2)
+        v = unpack('<H', v)[0]
+        TABLE.append(v)
+        if v < 256:
+            BITMAP_COUNT = max(BITMAP_COUNT, v+1)
+        print(v, end=', ')
+    print()
+    print('bitmap count=', BITMAP_COUNT)
+    # BITMAP_COUNT=256
+    W = 16*32 if BITMAP_COUNT >=32 else 16 * BITMAP_COUNT
+    H = math.ceil(BITMAP_COUNT / 32)*16
+    columns = W // 16
+
+    #? TSX
+    content = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        f'<tileset version="1.10" tiledversion="1.10.2" name="level{LEVEL}" tilewidth="16" tileheight="16" tilecount="{BITMAP_COUNT}" columns="{columns}">',
+        f' <image source="level{LEVEL}.png" width="{W}" height="{H}"/>',
+        '</tileset>',
+    ]
+    with open('Tiled-Project/assets/level%s.tsx' % LEVEL, 'w') as tsx:
+        for txt in content:
+            print(txt, file=tsx)
+
+
+    #? TMX
+    content = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        f'<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="256" height="{HEIGHT}" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">',
+        f' <tileset firstgid="1" source="assets/level{LEVEL}.tsx"/>',
+        ' <tileset firstgid="257" source="assets/union.tsx"/>',
+        f' <layer id="1" name="LEVEL {LEVEL}" width="256" height="{HEIGHT}">',
+        '  <data encoding="csv">',
+    ]
+    #? tilemap
+    f.seek(0)
+    for h,i in enumerate(range(HEIGHT)):
+        row = []
+        for x in range(256):
+            v = f.read(1)[0]
+            v = TABLE[v]
+            v += 1
+            row.append(str(v))
+        line = ','.join(row)
+        if i < HEIGHT -1: #? not the last
+            line += ','
+        content.append(line)
+
+    content += [
+        '</data>',
+        ' </layer>',
+        '</map>',
+    ]
+    with open('Tiled-Project/map_level%s.tmx' % LEVEL, 'w') as tmx:
+        for txt in content:
+            print(txt, file=tmx)
+
 
 def drawtiles():
     f = open('Assets/LEVEL%s.bin' % LEVEL, 'rb')
@@ -44,7 +110,7 @@ def drawtiles():
         v = f.read(2)
         v = unpack('<H', v)[0]
         if v < 256:
-            BITMAP_COUNT = max(BITMAP_COUNT, v)
+            BITMAP_COUNT = max(BITMAP_COUNT, v+1)
         print(v, end=', ')
     print()
     print('bitmap count=', BITMAP_COUNT)
@@ -112,6 +178,7 @@ def drawtiles():
         png_writer.write(f, rows)
 
 if __name__ == '__main__':
-    decompress()
+    # decompress()
 
     drawtiles()
+    gen_Tiled()
