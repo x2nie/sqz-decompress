@@ -30,7 +30,7 @@ def get_palette(level):
     return result
 
 
-def convert_planar_tile_4bpp(src, dst, dst_pitch):
+def convert_planar_tile_4bpp(src, tile_w = 16, tile_h = 16 ):
     '''
     The format of a tile (and a sprite too) is 4-bit planar. I.e. for a 16*16
     image (like a tile) it goes like this:
@@ -40,20 +40,50 @@ def convert_planar_tile_4bpp(src, dst, dst_pitch):
     32 bytes of monochrome 16*16 bitmap for plane 3
     '''
     #* https://en.wikipedia.org/wiki/Planar_(computer_graphics)#Example
-    tile_h = 16
-    tile_w = 16
-    plane_size = 16 * (16 // 8)
+    assert(tile_w * tile_h == len(src) // 4, 'PARAMETER IS INVALID!')
+    # dst = [0] * len(src)
+    dst = [0] * (tile_w * tile_h)
+    # plane_size = 16 * (16 // 8)
+    plane_size = len(src) // 4
+    planes = [src[i*plane_size: (i+1)*plane_size-1] for i in range(4)]
+    print('planes:') 
+    for P in planes:
+        print([hex(p) for p in P])
+    
+    for i in range(len(planes[0])):
+        for j in range(4):
+            mask = 1 << (7 - j)
+            color = planes[i] & mask
+            color |= planes[i] & mask
+        
+
+    # tile_h = 16
+    # tile_w = 16
+    # plane_size = 16 * (16 // 8)
+    plane_size = tile_w * tile_h // 8
     for y in range(tile_h):
         for x in range(tile_w // 8):
             for i in range(8):
                 mask = 1 << (7 - i)
                 color = 0
                 for b in range(4):
-                    if src[b * plane_size] & mask:
+                    if src[y*(tile_w //8) + x + b * plane_size] & mask:
                         color |= (1 << b)
                 if i & 1:
-                    dst[x * 4 + (i >> 1)] |= color
+                    dst[(y*(tile_w //8) + x) * 4 + (i >> 1)] |= color
                 else:
-                    dst[x * 4 + (i >> 1)] = color << 4
-            src += 1
-        dst += dst_pitch
+                    dst[(y*(tile_w //8) + x) * 4 + (i >> 1)] = color << 4
+        #     src += 1
+        # dst += dst_pitch
+    return dst
+
+
+if __name__ == '__main__':
+    src = [
+        0x55, 0x55,
+        0x33, 0x33,
+        0x0f, 0x0f,
+        0x00, 0xff,
+    ]
+    dst = convert_planar_tile_4bpp(src, 4, 4)
+    print(dst)

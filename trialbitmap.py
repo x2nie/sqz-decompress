@@ -7,7 +7,7 @@ LEVEL = 1
 HEIGHT = HEIGHTS[LEVEL-1]
 BITMAP_COUNT = 0      #? init
 
-f = open('LEVEL1.bin', 'rb')
+f = open('LEVEL%s.bin' % LEVEL, 'rb')
 
 #? tilemap
 f.seek(256*HEIGHT) #skip
@@ -27,7 +27,7 @@ print('bitmap count=', BITMAP_COUNT)
 #? bitmaps
 print('bitmap offset:', f.tell())
 PAL = get_palette(LEVEL)
-for b in range(13):
+for b in range(BITMAP_COUNT):
     #?Draw a bitmap
     print('BITMAP #', b)
     buff = f.read(128)

@@ -64,9 +64,9 @@ static PyObject *method_convert_planar(PyObject *self, PyObject *args) {
         return NULL;
     }
 
-    FILE *fp1 = fopen("planar_in.bin", "wb");
-    fwrite(data, 128, 1, fp1);
-    fclose(fp1);
+    // FILE *fp1 = fopen("planar_in.bin", "wb");
+    // fwrite(data, 128, 1, fp1);
+    // fclose(fp1);
 
 
     uint8_t buffer[16 * 8];
@@ -74,9 +74,9 @@ static PyObject *method_convert_planar(PyObject *self, PyObject *args) {
     // memcpy(data + offset, buffer, 16 * 8);
 
 
-    FILE *fp2 = fopen("planar_out.bin", "wb");
-    fwrite(buffer, 128, 1, fp2);
-    fclose(fp2);
+    // FILE *fp2 = fopen("planar_out.bin", "wb");
+    // fwrite(buffer, 128, 1, fp2);
+    // fclose(fp2);
 
 
     PyObject * python_val = Py_BuildValue("y#", buffer, 128);
