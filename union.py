@@ -21,10 +21,13 @@ def drawtiles():
     f.seek(128*15 + 256+512)
     #? bitmaps
     BITMAP_COUNT = 32
-    img = Image.new(mode="PA", size=(16*32, math.ceil(BITMAP_COUNT / 32)*16), color=0)
-    img.putpalette(get_pil_palette(LEVEL), 'RGBA')
+    W = 16*BITMAP_COUNT
+    H = math.ceil(BITMAP_COUNT / 32)*16
+    img = Image.new(mode="L", size=(W,H), color=0)
+    # img.putpalette(get_pil_palette(LEVEL), 'RGBA')
     print('bitmap offset:', f.tell())
     PAL = get_palette(LEVEL)
+    rows = [[ 0 for x in range(W)] for y in range(H)]
     for b in range(BITMAP_COUNT):
         #?Draw a bitmap
         print('BITMAP #', b)
@@ -34,7 +37,9 @@ def drawtiles():
         # print('dst:',type(dst), len(buff), dst)
         # break
 
-        rows = []
+        LEFT = b % 32
+        TOP = b // 32
+
         i = 0
         for y in range(16):
             row = []
@@ -50,22 +55,29 @@ def drawtiles():
                 row.append(b1)
                 row.append(b2)
 
+                rows[TOP*16+y][LEFT*16+x*2+0] = b1
+                rows[TOP*16+y][LEFT*16+x*2+1] = b2
+                
+
                 line += PAL[b1]
                 line += PAL[b2]
                 img.putpixel([x*2+0, y], b1)
                 img.putpixel([x*2+1, y], b2)
-            rows.append(row)
+            # rows.append(row)
             print(line)
         print()
 
         break
     # img.save('out.png', transparency=0)
-    img = img.convert('RGBA')
+    # img = img.convert('RGB')
     img.save('out.png')
+
+    for r in rows:
+        print('row:',r)
 
     with open('png-4bpp.png', 'wb') as f:
         #png_writer = png.Writer(im.shape[1], im.shape[0], bitdepth=4)  # without palette
-        png_writer = png.Writer(16, 16, bitdepth=4, palette=get_png_palette(LEVEL))  # with palette
+        png_writer = png.Writer(W, H, bitdepth=4, palette=get_png_palette(LEVEL))  # with palette
         png_writer.write(f, rows)
 
 if __name__ == '__main__':
