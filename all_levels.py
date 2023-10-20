@@ -44,6 +44,18 @@ def get_pil_palette(level):
         result.extend([0, 0, 0, 0])
     return result
 
+def get_png_palette(level):
+    from sty import fg, bg, ef, rs
+    pal_index = PAL_INDEXS[level-1]
+    result = []
+    with open('PRE2.PAL', 'rb') as f:
+        f.seek(4*16*pal_index)
+
+        for i in range(16):
+            (b,g,r,a) = f.read(4)
+            result.append(tuple([r, g, b, 0 if i==0 else 255]))
+    return result
+
 
 def convert_planar_tile_4bpp(src, tile_w = 16, tile_h = 16 ):
     '''
