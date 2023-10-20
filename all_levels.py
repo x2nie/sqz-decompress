@@ -30,6 +30,21 @@ def get_palette(level):
     return result
 
 
+def get_pil_palette(level):
+    from sty import fg, bg, ef, rs
+    pal_index = PAL_INDEXS[level-1]
+    result = []
+    with open('PRE2.PAL', 'rb') as f:
+        f.seek(4*16*pal_index)
+
+        for i in range(16):
+            (b,g,r,a) = f.read(4)
+            result.extend([r, g, b, a])
+    for i in range(256 - 16):
+        result.extend([0, 0, 0, 0])
+    return result
+
+
 def convert_planar_tile_4bpp(src, tile_w = 16, tile_h = 16 ):
     '''
     The format of a tile (and a sprite too) is 4-bit planar. I.e. for a 16*16
