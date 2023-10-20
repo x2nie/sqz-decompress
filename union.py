@@ -1,5 +1,5 @@
 import sqz
-import math
+import os, math
 import png
 from PIL import Image
 from all_levels import *
@@ -18,14 +18,17 @@ def decompress():
 
 def drawtiles():
     f = open('Assets/UNION.bin', 'rb')
-    f.seek(128*15 + 256+512)
+    # f.seek(128*15 + 256+512)
     #? bitmaps
-    BITMAP_COUNT = 128
+    f.seek(0, os.SEEK_END)
+    BITMAP_COUNT = f.tell() // 128
+    f.seek(0)
+
     W = 16*32
     H = math.ceil(BITMAP_COUNT / 32)*16
-    img = Image.new(mode="L", size=(W,H), color=0)
+    # img = Image.new(mode="L", size=(W,H), color=0)
     # img.putpalette(get_pil_palette(LEVEL), 'RGBA')
-    print('bitmap offset:', f.tell())
+    # print('bitmap offset:', f.tell())
     PAL = get_palette(LEVEL)
     rows = [[ 0 for x in range(W)] for y in range(H)]
     for b in range(BITMAP_COUNT):
@@ -61,8 +64,8 @@ def drawtiles():
 
                 line += PAL[b1]
                 line += PAL[b2]
-                img.putpixel([x*2+0, y], b1)
-                img.putpixel([x*2+1, y], b2)
+                # img.putpixel([x*2+0, y], b1)
+                # img.putpixel([x*2+1, y], b2)
             # rows.append(row)
             print(line)
         print()
@@ -70,10 +73,10 @@ def drawtiles():
         # break
     # img.save('out.png', transparency=0)
     # img = img.convert('RGB')
-    img.save('out.png')
+    # img.save('out.png')
 
-    for r in rows:
-        print('row:',r)
+    # for r in rows:
+    #     print('row:',r)
 
     with open('png-4bpp.png', 'wb') as f:
         #png_writer = png.Writer(im.shape[1], im.shape[0], bitdepth=4)  # without palette
