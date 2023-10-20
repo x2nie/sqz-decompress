@@ -15,8 +15,7 @@ This file explains the format of LEVEL*.SQZ, after decompression.
 | --------------------- | ----------------- | ------------ |
 | Tile Map              | 0                 | 256 * height |
 | Lookup Table          | 256 * height      | 512          |
-| Small Numbers         |                   | max(lookup<256)  |
-| Tile Bitmaps          | size(file) - 5029 | 128 * max(lookup<256) |
+| Tile Bitmaps          | 768               | 128 * max([lookup<256]) |
 | Level infos:          | size(file) - 5029 | 5029         |
 | - Tile Properties 1   |  -5029 + 0        |  256         |
 | - Tile Properties 2   |  -5029 + 256      |  256         |
