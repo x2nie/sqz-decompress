@@ -1,4 +1,5 @@
 from struct import unpack
+import sqz
 from all_levels import *
 
 #? this level consts:
@@ -21,6 +22,7 @@ for i in range(256):
 print()
 print('bitmap count=', BITMAP_COUNT)
 
+# a = f.read(2)
 
 #? bitmaps
 print('bitmap offset:', f.tell())
@@ -28,11 +30,20 @@ PAL = get_palette(LEVEL)
 for b in range(13):
     #?Draw a bitmap
     print('BITMAP #', b)
+    buff = f.read(128)
+    dst = sqz.convert_planar(buff)
+    # print('buff:',type(buff),len(buff), buff)
+    # print('dst:',type(dst), len(buff), dst)
+    # break
+
+    i = 0
     for y in range(16):
         line = ''
         for x in range(8):
             # v = int(f.read(1)[0])
-            v = int(f.read(1)[0])
+            # v = int(f.read(1)[0])
+            v = dst[i]; i +=1
+
             b1 = v >> 4
             b2 = v & 0x0F
             line += PAL[b1]
