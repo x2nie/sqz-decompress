@@ -29,3 +29,31 @@ def get_palette(level):
     #     print(r)
     return result
 
+
+def convert_planar_tile_4bpp(src, dst, dst_pitch):
+    '''
+    The format of a tile (and a sprite too) is 4-bit planar. I.e. for a 16*16
+    image (like a tile) it goes like this:
+    32 bytes of monochrome 16*16 bitmap for plane 0
+    32 bytes of monochrome 16*16 bitmap for plane 1
+    32 bytes of monochrome 16*16 bitmap for plane 2
+    32 bytes of monochrome 16*16 bitmap for plane 3
+    '''
+    #* https://en.wikipedia.org/wiki/Planar_(computer_graphics)#Example
+    tile_h = 16
+    tile_w = 16
+    plane_size = 16 * (16 // 8)
+    for y in range(tile_h):
+        for x in range(tile_w // 8):
+            for i in range(8):
+                mask = 1 << (7 - i)
+                color = 0
+                for b in range(4):
+                    if src[b * plane_size] & mask:
+                        color |= (1 << b)
+                if i & 1:
+                    dst[x * 4 + (i >> 1)] |= color
+                else:
+                    dst[x * 4 + (i >> 1)] = color << 4
+            src += 1
+        dst += dst_pitch
