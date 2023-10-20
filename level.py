@@ -5,6 +5,19 @@ from struct import unpack
 from all_levels import *
 
 LEVEL = 1
+LEVEL = 2
+LEVEL = 3
+LEVEL = 4
+LEVEL = 5
+LEVEL = 6
+LEVEL = 7
+LEVEL = 8
+LEVEL = 9
+LEVEL = 10
+LEVEL = 11
+LEVEL = 14
+LEVEL = 15
+LEVEL = 16
 HEIGHT = HEIGHTS[LEVEL-1]
 
 
@@ -35,8 +48,10 @@ def drawtiles():
         print(v, end=', ')
     print()
     print('bitmap count=', BITMAP_COUNT)
-    #? bitmaps
-    
+    # BITMAP_COUNT=256
+
+
+    #? bitmaps    
     W = 16*32 if BITMAP_COUNT >=32 else 16 * BITMAP_COUNT
     H = math.ceil(BITMAP_COUNT / 32)*16
     # img = Image.new(mode="L", size=(W,H), color=0)
@@ -97,6 +112,6 @@ def drawtiles():
         png_writer.write(f, rows)
 
 if __name__ == '__main__':
-    # decompress()
+    decompress()
 
     drawtiles()
