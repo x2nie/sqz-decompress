@@ -20,8 +20,8 @@ def drawtiles():
     f = open('Assets/UNION.bin', 'rb')
     f.seek(128*15 + 256+512)
     #? bitmaps
-    BITMAP_COUNT = 32
-    W = 16*BITMAP_COUNT
+    BITMAP_COUNT = 128
+    W = 16*32
     H = math.ceil(BITMAP_COUNT / 32)*16
     img = Image.new(mode="L", size=(W,H), color=0)
     # img.putpalette(get_pil_palette(LEVEL), 'RGBA')
@@ -67,7 +67,7 @@ def drawtiles():
             print(line)
         print()
 
-        break
+        # break
     # img.save('out.png', transparency=0)
     # img = img.convert('RGB')
     img.save('out.png')
