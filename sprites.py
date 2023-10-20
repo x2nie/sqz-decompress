@@ -7,8 +7,8 @@ from all_levels import *
 LEVEL = 1
 
 def decompress():
-    compressed_file = "Assets/UNION.SQZ"
-    output_file = "Assets/UNION.bin"
+    compressed_file = "Assets/SPRITES.SQZ"
+    output_file = "Assets/SPRITES.bin"
     bytes_copied = sqz.decompress(compressed_file, output_file)
 
     # with open('test_write.txt', 'r') as f:
@@ -17,7 +17,7 @@ def decompress():
     # assert content_copied == content_to_copy
 
 def drawtiles():
-    f = open('Assets/UNION.bin', 'rb')
+    f = open('Assets/SPRITES.bin', 'rb')
     # f.seek(128*15 + 256+512)
     #? bitmaps
     f.seek(0, os.SEEK_END)
@@ -78,12 +78,12 @@ def drawtiles():
     # for r in rows:
     #     print('row:',r)
 
-    with open('Tiled-Project/assets/union.png', 'wb') as f:
+    with open('Tiled-Project/assets/sprites.png', 'wb') as f:
         # https://stackoverflow.com/questions/62765455/convert-images-bit-depth-with-pypng
         png_writer = png.Writer(W, H, bitdepth=4, palette=get_png_palette(LEVEL))  # with palette
         png_writer.write(f, rows)
 
 if __name__ == '__main__':
-    # decompress()
+    decompress()
 
     drawtiles()
