@@ -131,7 +131,7 @@ def gen_Tiled():
         ' </layer>',
     ]
 
-    #? Tile Flag Byte 1 tilemap
+    #? Tile Flag Byte 2 tilemap
     content += [
         f' <layer id="3" name="Vertical Props" width="256" height="{HEIGHT}">',
          '  <data encoding="csv">',
@@ -146,7 +146,33 @@ def gen_Tiled():
                 v = 0
             else:
                 v = p2[v]
-                v += 1000
+                v += 1008
+            row.append(str(v))
+        line = ','.join(row)
+        if h < HEIGHT -1: #? not the last
+            line += ','
+        content.append(line)
+    content += [
+        '</data>',
+        ' </layer>',
+    ]
+
+    #? Tile Flag Byte 3 tilemap
+    content += [
+        f' <layer id="3" name="Misc Props" width="256" height="{HEIGHT}">',
+         '  <data encoding="csv">',
+    ]
+    f.seek(0)
+    for h in range(HEIGHT):
+        row = []
+        for x in range(256):
+            v = f.read(1)[0]
+            v = TABLE[v]
+            if v >= 256:
+                v = 0
+            else:
+                v = p3[v]
+                v += 1016
             row.append(str(v))
         line = ','.join(row)
         if h < HEIGHT -1: #? not the last
