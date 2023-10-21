@@ -182,7 +182,12 @@ def gen_Tiled():
             #     v += 1016
             v = p3[v]
             if v > 0:
-                v += 1016
+                a = v & 0x03
+                b = v & 0xe0
+                b = b >> 3
+                v = a + b
+                
+                v += 1032
 
             row.append(str(v))
         line = ','.join(row)
