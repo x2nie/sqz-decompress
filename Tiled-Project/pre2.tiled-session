@@ -7,12 +7,47 @@
     "expandedProjectPaths": [
     ],
     "fileStates": {
+        "assets/level1.tsx": {
+            "scaleInEditor": 1
+        },
         "coba1.tmx": {
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 238,
                 "y": 182
+            }
+        },
+        "coba2.tmx": {
+            "scale": 1.061328125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 303.86455649613544,
+                "y": 159.23444976076559
+            }
+        },
+        "map_level1.tmx": {
+            "scale": 1,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1049,
+                "y": 646
+            }
+        },
+        "map_level2.tmx": {
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1886,
+                "y": 1553
+            }
+        },
+        "map_level3.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 578,
+                "y": 535
             }
         }
     },
@@ -25,6 +60,11 @@
     ],
     "project": "pre2.tiled-project",
     "recentFiles": [
+        "map_level3.tmx",
+        "map_level2.tmx",
+        "map_level1.tmx",
+        "assets/level1.tsx",
+        "coba1.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
