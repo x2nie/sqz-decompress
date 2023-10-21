@@ -34,6 +34,22 @@
                 "y": 646
             }
         },
+        "map_level10.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4010,
+                "y": 54
+            }
+        },
+        "map_level11.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2920,
+                "y": 420
+            }
+        },
         "map_level2.tmx": {
             "scale": 1,
             "selectedLayer": 4,
@@ -46,8 +62,56 @@
             "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 578,
-                "y": 535
+                "x": 2258,
+                "y": 637
+            }
+        },
+        "map_level4.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 794,
+                "y": 448.66666666666663
+            }
+        },
+        "map_level5.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 3649.333333333333,
+                "y": 1712
+            }
+        },
+        "map_level6.tmx": {
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 198.33333333333331,
+                "y": 875
+            }
+        },
+        "map_level7.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2105.5,
+                "y": 897
+            }
+        },
+        "map_level8.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2024,
+                "y": 1092
+            }
+        },
+        "map_level9.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2808,
+                "y": 824
             }
         }
     },
