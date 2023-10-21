@@ -115,11 +115,14 @@ def gen_Tiled():
         row = []
         for x in range(256):
             v = f.read(1)[0]
-            v = TABLE[v]
-            if v >= 256:
-                v = 0
-            else:
-                v = p1[v]
+            # v = TABLE[v]
+            # if v >= 256:
+            #     v = 0
+            # else:
+            #     v = p1[v]
+            #     v += 1000
+            v = p1[v]
+            if v > 0:
                 v += 1000
             row.append(str(v))
         line = ','.join(row)
@@ -141,12 +144,16 @@ def gen_Tiled():
         row = []
         for x in range(256):
             v = f.read(1)[0]
-            v = TABLE[v]
-            if v >= 256:
-                v = 0
-            else:
-                v = p2[v]
+            # v = TABLE[v]
+            # if v >= 256:
+            #     v = 0
+            # else:
+            #     v = p2[v]
+            #     v += 1008
+            v = p2[v]
+            if v > 0:
                 v += 1008
+
             row.append(str(v))
         line = ','.join(row)
         if h < HEIGHT -1: #? not the last
@@ -159,7 +166,7 @@ def gen_Tiled():
 
     #? Tile Flag Byte 3 tilemap
     content += [
-        f' <layer id="3" name="Misc Props" width="256" height="{HEIGHT}">',
+        f' <layer id="4" name="Misc Props" width="256" height="{HEIGHT}">',
          '  <data encoding="csv">',
     ]
     f.seek(0)
@@ -167,12 +174,46 @@ def gen_Tiled():
         row = []
         for x in range(256):
             v = f.read(1)[0]
-            v = TABLE[v]
-            if v >= 256:
-                v = 0
-            else:
-                v = p3[v]
+            # v = TABLE[v]
+            # if v >= 256:
+            #     v = 0
+            # else:
+            #     v = p3[v]
+            #     v += 1016
+            v = p3[v]
+            if v > 0:
                 v += 1016
+
+            row.append(str(v))
+        line = ','.join(row)
+        if h < HEIGHT -1: #? not the last
+            line += ','
+        content.append(line)
+    content += [
+        '</data>',
+        ' </layer>',
+    ]
+
+    #? Tile Flag Byte 4 tilemap
+    content += [
+        f' <layer id="5" name="Slope Props" width="256" height="{HEIGHT}">',
+         '  <data encoding="csv">',
+    ]
+    f.seek(0)
+    for h in range(HEIGHT):
+        row = []
+        for x in range(256):
+            v = f.read(1)[0]
+            # v = TABLE[v]
+            # if v >= 256:
+            #     v = 0
+            # else:
+            #     v = p3[v]
+            #     v += 1016
+            v = p4[v]
+            if v > 0:
+                v += 1016
+
             row.append(str(v))
         line = ','.join(row)
         if h < HEIGHT -1: #? not the last
