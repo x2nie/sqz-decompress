@@ -52,6 +52,15 @@ def gen_Tiled():
     H = math.ceil(BITMAP_COUNT / 32)*16
     columns = W // 16
 
+    #? get level-tiles props
+    f.seek(-5029, os.SEEK_END)
+    p1 = f.read(256)
+    p2 = f.read(256)
+    p3 = f.read(256)
+    f.seek(-5029, os.SEEK_END)
+    f.seek(4031, os.SEEK_CUR)
+    p4 = f.read(256)
+
     #? TSX
     content = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -65,17 +74,22 @@ def gen_Tiled():
 
 
     #? TMX
+
     content = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         f'<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="256" height="{HEIGHT}" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">',
         f' <tileset firstgid="1" source="assets/level{LEVEL}.tsx"/>',
-        ' <tileset firstgid="257" source="assets/union.tsx"/>',
-        f' <layer id="1" name="LEVEL {LEVEL}" width="256" height="{HEIGHT}">',
-        '  <data encoding="csv">',
+         ' <tileset firstgid="257" source="assets/union.tsx"/>',
+         ' <tileset firstgid="1000" source="assets/tile-flag.tsx"/>',
     ]
-    #? tilemap
+
+    #? MAIN tilemap
+    content += [
+        f' <layer id="1" name="LEVEL {LEVEL}" width="256" height="{HEIGHT}">',
+         '  <data encoding="csv">',
+    ]
     f.seek(0)
-    for h,i in enumerate(range(HEIGHT)):
+    for h in range(HEIGHT):
         row = []
         for x in range(256):
             v = f.read(1)[0]
@@ -83,19 +97,75 @@ def gen_Tiled():
             v += 1
             row.append(str(v))
         line = ','.join(row)
-        if i < HEIGHT -1: #? not the last
+        if h < HEIGHT -1: #? not the last
             line += ','
         content.append(line)
-
     content += [
         '</data>',
         ' </layer>',
+    ]
+
+    #? Tile Flag Byte 1 tilemap
+    content += [
+        f' <layer id="2" name="Horizontal Props" width="256" height="{HEIGHT}">',
+         '  <data encoding="csv">',
+    ]
+    f.seek(0)
+    for h in range(HEIGHT):
+        row = []
+        for x in range(256):
+            v = f.read(1)[0]
+            v = TABLE[v]
+            if v >= 256:
+                v = 0
+            else:
+                v = p1[v]
+                v += 1000
+            row.append(str(v))
+        line = ','.join(row)
+        if h < HEIGHT -1: #? not the last
+            line += ','
+        content.append(line)
+    content += [
+        '</data>',
+        ' </layer>',
+    ]
+
+    #? Tile Flag Byte 1 tilemap
+    content += [
+        f' <layer id="3" name="Vertical Props" width="256" height="{HEIGHT}">',
+         '  <data encoding="csv">',
+    ]
+    f.seek(0)
+    for h in range(HEIGHT):
+        row = []
+        for x in range(256):
+            v = f.read(1)[0]
+            v = TABLE[v]
+            if v >= 256:
+                v = 0
+            else:
+                v = p2[v]
+                v += 1000
+            row.append(str(v))
+        line = ','.join(row)
+        if h < HEIGHT -1: #? not the last
+            line += ','
+        content.append(line)
+    content += [
+        '</data>',
+        ' </layer>',
+    ]
+
+    #? eof.map
+    content += [
         '</map>',
     ]
     with open('Tiled-Project/map_level%s.tmx' % LEVEL, 'w') as tmx:
         for txt in content:
             print(txt, file=tmx)
 
+    f.close()
 
 def drawtiles():
     f = open('Assets/LEVEL%s.bin' % LEVEL, 'rb')
